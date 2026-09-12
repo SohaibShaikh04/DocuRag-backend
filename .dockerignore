@@ -1,0 +1,27 @@
+# Git
+.git
+.gitignore
+
+# Secrets — never ship these
+.env
+.env.*
+!.env.example
+
+# ChromaDB data — ephemeral, not part of the image
+chroma_db/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Misc
+*.log
+.DS_Store

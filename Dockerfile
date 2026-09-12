@@ -2,11 +2,14 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# ── System deps for PyMuPDF ───────────────────────────────────────────────────
+# ── System deps ───────────────────────────────────────────────────────────────
 RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
     curl \
     && rm -rf /var/lib/apt/lists/*
+
+# ── Install CPU-only PyTorch first (~150MB instead of 2.5GB CUDA image) ───────
+RUN pip install --no-cache-dir --extra-index-url https://download.pytorch.org/whl/cpu torch torchvision
 
 # ── Python deps ───────────────────────────────────────────────────────────────
 COPY requirements.txt .
@@ -19,7 +22,7 @@ RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTr
 # ── Application code ──────────────────────────────────────────────────────────
 COPY . .
 
-EXPOSE 8000
+# Render exposes PORT dynamically (defaults to 10000)
+EXPOSE 10000
 
-# Use $PORT if the platform injects it (Railway does), fallback to 8000
-CMD uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}
+CMD ["sh", "-c", "uvicorn main:app --host 0.0.0.0 --port ${PORT:-10000}"]

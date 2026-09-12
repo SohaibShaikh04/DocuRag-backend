@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: docurag-backend
+    env: docker
+    plan: free
+    region: oregon
+    healthCheckPath: /health
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
+      - key: GROQ_MODEL
+        value: groq/compound-mini
+      - key: RAG_TOP_K
+        value: "10"
+      - key: RAG_SCORE
+        value: "0.75"
+      - key: RAG_MAX_TOK
+        value: "1024"
